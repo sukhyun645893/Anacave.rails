@@ -1,0 +1,71 @@
+﻿<!DOCTYPE html>
+<% site_setting = SiteSetting.current %>
+<html>
+  <head>
+    <title><%= content_for(:title) || "Anacave" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="Anacave">
+    <meta name="mobile-web-app-capable" content="yes">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= yield :head %>
+
+    <link rel="icon" href="/icon.png" type="image/png">
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/icon.png">
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js" defer></script>
+
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body class="<%= "dark-mode" if site_setting.dark_mode? %>" style="<%= "--community-bg: url('#{url_for(site_setting.background_image)}')" if site_setting.background_image.attached? %>">
+    <header class="site-header">
+      <%= link_to "Anacave", root_path, class: "brand" %>
+      <nav>
+        <%= link_to "챕터", chapters_path %>
+        <%= link_to "아나콘", anacons_path %>
+        <% if authenticated? %>
+          <%= link_to "글쓰기", new_post_path %>
+          <%= link_to "프로필", profile_path %>
+          <%= link_to "설정", edit_site_setting_path %>
+          <%= link_to notifications_path, class: "notification-link", title: "알림" do %>
+            <span aria-hidden="true">알림</span>
+            <% unread_count = Current.user.notifications.unread.count %>
+            <% if unread_count.positive? %>
+              <span class="notification-badge"><%= unread_count %></span>
+            <% end %>
+          <% end %>
+          <% if Current.user.admin? %>
+            <%= link_to "관리", admin_root_path %>
+            <%= link_to "아나콘 승인", admin_anacons_path %>
+          <% end %>
+          <%= button_to "로그아웃", session_path, method: :delete, class: "link-button" %>
+        <% else %>
+          <%= link_to "로그인", new_session_path %>
+          <%= link_to "회원가입", new_registration_path, class: "button" %>
+        <% end %>
+      </nav>
+    </header>
+
+    <main class="page">
+      <% if notice.present? %>
+        <p class="flash notice"><%= notice %></p>
+      <% end %>
+
+      <% if alert.present? %>
+        <p class="flash alert"><%= alert %></p>
+      <% end %>
+
+      <%= yield %>
+    </main>
+
+    <footer class="site-footer">
+      <%= link_to "이용약관", terms_path %>
+      <%= link_to "개인정보처리방침", privacy_path %>
+    </footer>
+  </body>
+</html>

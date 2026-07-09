@@ -1,0 +1,23 @@
+<% content_for :title, "프로필" %>
+
+<section class="profile-panel">
+  <div class="profile-header">
+    <% if @user.avatar.attached? %>
+      <%= image_tag @user.avatar, class: "avatar avatar-large", alt: @user.display_name %>
+    <% else %>
+      <div class="avatar avatar-large avatar-placeholder"><%= @user.display_name.first.upcase %></div>
+    <% end %>
+
+    <div>
+      <h1><%= @user.display_name %></h1>
+      <p class="meta">@<%= @user.username %></p>
+      <% if @user.bio.present? %>
+        <p><%= simple_format(@user.bio) %></p>
+      <% else %>
+        <p class="empty">아직 소개가 없습니다.</p>
+      <% end %>
+    </div>
+  </div>
+
+  <%= link_to "프로필 수정", edit_profile_path, class: "button primary" %>
+</section>

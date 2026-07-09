@@ -1,0 +1,27 @@
+<% content_for :title, "챕터" %>
+
+<section class="section-heading">
+  <div>
+    <h1>챕터</h1>
+    <p>관심 있는 챕터에 들어가서 글을 확인해보세요.</p>
+  </div>
+</section>
+
+<div class="chapter-grid">
+  <% @chapters.each do |chapter| %>
+    <%= link_to chapter_path(chapter), class: "chapter-card" do %>
+      <div>
+        <h2><%= chapter.name %></h2>
+        <p><%= chapter.description %></p>
+      </div>
+      <div class="chapter-stats">
+        <span>게시글 <%= chapter.posts_count %></span>
+        <% if chapter.latest_post_at.present? %>
+          <span>최근 <%= time_ago_in_words(chapter.latest_post_at) %> 전</span>
+        <% else %>
+          <span>아직 글 없음</span>
+        <% end %>
+      </div>
+    <% end %>
+  <% end %>
+</div>

@@ -1,0 +1,44 @@
+﻿<% content_for :title, "회원가입" %>
+
+<section class="auth-panel">
+  <h1>회원가입</h1>
+
+  <%= form_with model: @user, url: registration_path, class: "stack" do |form| %>
+    <% if @user.errors.any? %>
+      <div class="flash alert">
+        <%= @user.errors.full_messages.to_sentence %>
+      </div>
+    <% end %>
+
+    <div>
+      <%= form.label :username, "아이디" %>
+      <%= form.text_field :username, required: true, autofocus: true, autocomplete: "username", minlength: 3, maxlength: 24, pattern: "[a-z0-9_]+" %>
+      <p class="meta">영문 소문자, 숫자, 밑줄(_)만 사용할 수 있습니다. 이메일은 받지 않습니다.</p>
+    </div>
+
+    <div>
+      <%= form.label :nickname, "닉네임" %>
+      <%= form.text_field :nickname, required: true, maxlength: 30 %>
+    </div>
+
+    <div>
+      <%= form.label :password, "비밀번호" %>
+      <%= form.password_field :password, required: true, autocomplete: "new-password" %>
+    </div>
+
+    <div>
+      <%= form.label :password_confirmation, "비밀번호 확인" %>
+      <%= form.password_field :password_confirmation, required: true, autocomplete: "new-password" %>
+    </div>
+
+    <label class="check-row">
+      <%= check_box_tag :terms_agreement, "1", false, required: true %>
+      <span>
+        <%= link_to "이용약관", terms_path, target: "_blank", rel: "noopener" %>과
+        <%= link_to "개인정보처리방침", privacy_path, target: "_blank", rel: "noopener" %>에 동의합니다.
+      </span>
+    </label>
+
+    <%= form.submit "가입하기", class: "button primary" %>
+  <% end %>
+</section>

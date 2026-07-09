@@ -1,0 +1,11 @@
+<% content_for :title, "새 글" %>
+
+<h1>새 글</h1>
+
+<%= render "form", post: @post %>
+
+<br>
+
+<div>
+  <%= link_to "챕터 목록", chapters_path %>
+</div>

@@ -1,0 +1,37 @@
+<section class="section-heading">
+  <div>
+    <h1>아나콘 승인</h1>
+    <p>유저가 등록한 아나콘 묶음을 검수하고 승인 또는 반려합니다. 승인된 아나콘만 글/댓글 선택기에 표시됩니다.</p>
+  </div>
+
+  <%= link_to "신고 관리", admin_root_path, class: "button" %>
+</section>
+
+<div class="admin-list">
+  <% if @anacons.any? %>
+    <% @anacons.each do |anacon| %>
+      <article class="admin-card">
+        <div>
+          <p class="meta"><%= anacon.status_label %> · <%= anacon.user.display_name %> · 이미지 <%= anacon.images.size %>개</p>
+          <h2><%= link_to anacon.title, anacon %></h2>
+          <p><%= truncate(anacon.description, length: 160) %></p>
+        </div>
+
+        <div class="anacon-admin-preview">
+          <% anacon.images.each do |image| %>
+            <%= image_tag image, alt: anacon.title %>
+          <% end %>
+        </div>
+
+        <div class="admin-actions">
+          <%= button_to "승인", admin_anacon_path(anacon, status: "approved"), method: :patch, class: "button primary", disabled: anacon.approved? %>
+          <%= button_to "반려", admin_anacon_path(anacon, status: "rejected"), method: :patch, class: "button danger", disabled: anacon.rejected? %>
+          <%= button_to "삭제", admin_anacon_path(anacon), method: :delete, class: "button danger" %>
+          <%= button_to "등록자 차단", block_admin_user_path(anacon.user), method: :patch, class: "button danger", disabled: anacon.user.blocked? %>
+        </div>
+      </article>
+    <% end %>
+  <% else %>
+    <p class="empty">검수할 아나콘이 없습니다.</p>
+  <% end %>
+</div>

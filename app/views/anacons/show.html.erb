@@ -1,0 +1,49 @@
+<section class="anacon-detail">
+  <div class="anacon-detail-preview anacon-pack-preview">
+    <% @anacon.images.each do |image| %>
+      <%= image_tag image, alt: @anacon.title %>
+    <% end %>
+  </div>
+
+  <div class="anacon-detail-body">
+    <p class="meta">아나콘 · <%= @anacon.status_label %></p>
+    <h1><%= @anacon.title %></h1>
+    <p class="meta"><%= @anacon.user.display_name %> · 이미지 <%= @anacon.images.size %>개</p>
+
+    <% if @anacon.description.present? %>
+      <%= simple_format(@anacon.description) %>
+    <% else %>
+      <p class="empty">설명이 없습니다.</p>
+    <% end %>
+
+    <% unless @anacon.approved? %>
+      <div class="flash alert">이 아나콘은 아직 관리자 승인 전이라 받을 수 없습니다.</div>
+    <% end %>
+
+    <div class="anacon-token-box">
+      승인된 아나콘을 받은 뒤 글쓰기와 댓글에서 사용할 수 있습니다. 권리 침해가 의심되면 저작권 신고를 접수해주세요.
+    </div>
+
+    <div class="actions">
+      <%= link_to "목록으로", anacons_path, class: "button" %>
+      <% if authenticated? && @anacon.approved? %>
+        <% if @anacon.downloaded_by?(Current.user) %>
+          <%= button_to "내 아나콘에서 제거", user_anacon_path(@anacon), method: :delete, class: "button" %>
+        <% else %>
+          <%= button_to "아나콘 받기", user_anacons_path(anacon_id: @anacon.id), method: :post, class: "button primary" %>
+        <% end %>
+      <% elsif !authenticated? && @anacon.approved? %>
+        <%= link_to "로그인하고 받기", new_session_path, class: "button primary" %>
+      <% end %>
+      <% if authenticated? %>
+        <%= button_to "저작권 신고", reports_path, method: :post, class: "button danger", params: { report: { reportable_type: "Anacon", reportable_id: @anacon.id, reason: "copyright" } } %>
+      <% end %>
+      <% if Current.user&.admin? %>
+        <%= button_to "관리자 삭제", admin_anacon_path(@anacon), method: :delete, class: "button danger" %>
+        <% unless @anacon.user.blocked? %>
+          <%= button_to "등록자 차단", block_admin_user_path(@anacon.user), method: :patch, class: "button danger" %>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+</section>

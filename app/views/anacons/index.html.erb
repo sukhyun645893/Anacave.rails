@@ -1,0 +1,44 @@
+<section class="section-heading">
+  <div>
+    <h1>아나콘</h1>
+    <p>아나콘을 받아두면 글쓰기와 댓글에서 디시콘처럼 사용할 수 있습니다.</p>
+  </div>
+
+  <% if authenticated? %>
+    <%= link_to "아나콘 올리기", new_anacon_path, class: "button primary" %>
+  <% else %>
+    <%= link_to "로그인하고 받기", new_session_path, class: "button" %>
+  <% end %>
+</section>
+
+<div class="anacon-grid">
+  <% if @anacons.any? %>
+    <% @anacons.each do |anacon| %>
+      <article class="anacon-card">
+        <%= link_to anacon do %>
+          <% if anacon.cover_image.present? %>
+            <%= image_tag anacon.cover_image, class: "anacon-preview", alt: anacon.title %>
+          <% else %>
+            <div class="anacon-file-icon">ICON</div>
+          <% end %>
+        <% end %>
+
+        <div>
+          <h2><%= link_to anacon.title, anacon %></h2>
+          <p><%= truncate(anacon.description, length: 80) %></p>
+          <p class="meta"><%= anacon.user.display_name %> · <%= anacon.images.size %>개</p>
+        </div>
+
+        <% if authenticated? %>
+          <% if anacon.downloaded_by?(Current.user) %>
+            <%= button_to "받음", user_anacon_path(anacon), method: :delete, class: "button" %>
+          <% else %>
+            <%= button_to "받기", user_anacons_path(anacon_id: anacon.id), method: :post, class: "button primary" %>
+          <% end %>
+        <% end %>
+      </article>
+    <% end %>
+  <% else %>
+    <p class="empty">아직 승인된 아나콘이 없습니다.</p>
+  <% end %>
+</div>

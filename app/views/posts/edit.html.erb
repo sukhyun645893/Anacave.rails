@@ -1,0 +1,12 @@
+<% content_for :title, "글 수정" %>
+
+<h1>글 수정</h1>
+
+<%= render "form", post: @post %>
+
+<br>
+
+<div>
+  <%= link_to "게시글 보기", @post %> |
+  <%= link_to "챕터로", chapter_path(@post.chapter) %>
+</div>

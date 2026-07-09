@@ -1,0 +1,53 @@
+<% content_for :title, "설정" %>
+
+<section class="section-heading">
+  <div>
+    <h1>설정</h1>
+    <p>커뮤니티 화면 분위기와 배경을 바꿀 수 있습니다.</p>
+  </div>
+</section>
+
+<section class="design-panel">
+  <%= form_with model: @site_setting, url: site_setting_path, method: :patch, class: "stack" do |form| %>
+    <% if @site_setting.errors.any? %>
+      <div class="flash alert">
+        <%= @site_setting.errors.full_messages.to_sentence %>
+      </div>
+    <% end %>
+
+    <div class="setting-row">
+      <div>
+        <h2>다크 모드</h2>
+        <p class="meta">전체 화면을 어두운 톤으로 바꿉니다.</p>
+      </div>
+      <label class="switch">
+        <%= form.check_box :dark_mode %>
+        <span></span>
+      </label>
+    </div>
+
+    <div>
+      <h2>배경 이미지</h2>
+      <% if @site_setting.background_image.attached? %>
+        <div class="background-preview" style="background-image: url('<%= url_for(@site_setting.background_image) %>')"></div>
+      <% else %>
+        <div class="background-preview background-preview-empty">아직 배경 이미지가 없습니다.</div>
+      <% end %>
+    </div>
+
+    <div>
+      <%= form.label :background_image, "새 배경 이미지" %>
+      <%= form.file_field :background_image, accept: "image/png,image/jpeg,image/gif,image/webp" %>
+    </div>
+
+    <div class="actions">
+      <%= form.submit "설정 저장", class: "button primary" %>
+    </div>
+  <% end %>
+
+  <% if @site_setting.background_image.attached? %>
+    <div class="settings-danger">
+      <%= button_to "배경 제거", site_setting_path, method: :patch, params: { remove_background: "1" }, class: "button danger" %>
+    </div>
+  <% end %>
+</section>

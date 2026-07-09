@@ -1,0 +1,9 @@
+free:
+  name: 자유
+  slug: free
+  description: 자유롭게 이야기하는 챕터
+
+dev:
+  name: 개발
+  slug: dev
+  description: 개발 이야기를 나누는 챕터

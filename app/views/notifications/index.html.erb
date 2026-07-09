@@ -1,0 +1,30 @@
+<section class="section-heading">
+  <div>
+    <h1>알림</h1>
+    <p>댓글, 아나콘 승인 결과, 신고 처리 결과가 이곳에 표시됩니다.</p>
+  </div>
+
+  <%= button_to "모두 읽음", mark_all_notifications_path, method: :patch, class: "button" %>
+</section>
+
+<div class="notification-list">
+  <% if @notifications.any? %>
+    <% @notifications.each do |notification| %>
+      <article class="notification-item <%= "notification-unread" if notification.unread? %>">
+        <div>
+          <h2><%= notification.title %></h2>
+          <% if notification.body.present? %>
+            <p><%= notification.body %></p>
+          <% end %>
+          <p class="meta"><%= time_ago_in_words(notification.created_at) %> 전</p>
+        </div>
+
+        <% if notification.url.present? %>
+          <%= link_to "열기", notification.url, class: "button" %>
+        <% end %>
+      </article>
+    <% end %>
+  <% else %>
+    <p class="empty">아직 알림이 없습니다.</p>
+  <% end %>
+</div>

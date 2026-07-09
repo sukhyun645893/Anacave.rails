@@ -1,0 +1,24 @@
+<% content_for :title, "로그인" %>
+
+<section class="auth-panel">
+  <h1>로그인</h1>
+
+  <%= tag.div(flash[:alert], class: "flash alert") if flash[:alert] %>
+  <%= tag.div(flash[:notice], class: "flash notice") if flash[:notice] %>
+
+  <%= form_with url: session_path, class: "stack" do |form| %>
+    <div>
+      <%= form.label :username, "아이디" %>
+      <%= form.text_field :username, required: true, autofocus: true, autocomplete: "username", value: params[:username] %>
+    </div>
+
+    <div>
+      <%= form.label :password, "비밀번호" %>
+      <%= form.password_field :password, required: true, autocomplete: "current-password", maxlength: 72 %>
+    </div>
+
+    <%= form.submit "로그인", class: "button primary" %>
+  <% end %>
+
+  <p class="meta">이 커뮤니티는 개인정보를 줄이기 위해 이메일 없이 아이디로 가입합니다.</p>
+</section>

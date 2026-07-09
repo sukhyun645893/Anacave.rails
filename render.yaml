@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: anacave
+    runtime: ruby
+    plan: free
+    buildCommand: bash bin/render-build.sh
+    startCommand: bin/rails server
+    healthCheckPath: /up
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: anacave-db
+          property: connectionString
+      - key: RAILS_MASTER_KEY
+        sync: false
+      - key: WEB_CONCURRENCY
+        value: 2
+      - key: ACTIVE_STORAGE_SERVICE
+        value: local
+
+databases:
+  - name: anacave-db
+    plan: free

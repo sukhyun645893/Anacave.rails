@@ -1,0 +1,29 @@
+<%= form_with(model: post, url: post.persisted? ? post_path(post) : (post.chapter ? chapter_posts_path(post.chapter) : posts_path), class: "stack post-form") do |form| %>
+  <% if post.errors.any? %>
+    <div class="flash alert">
+      <%= post.errors.full_messages.to_sentence %>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :chapter_id, "챕터" %>
+    <%= form.collection_select :chapter_id, @chapters, :id, :name, { prompt: "챕터를 선택하세요" }, required: true %>
+  </div>
+
+  <div>
+    <%= form.label :title, "제목" %>
+    <%= form.text_field :title, required: true %>
+  </div>
+
+  <div data-controller="quill-editor" data-quill-editor-content-value="<%= post.body.to_s %>">
+    <%= form.label :body, "내용" %>
+    <%= form.hidden_field :body, data: { quill_editor_target: "input" } %>
+    <div class="editor-toolbar-hint">이미지, 링크, 제목, 인용, 목록, 아나콘을 넣을 수 있습니다.</div>
+    <%= render "anacons/picker", anacons: @anacons, mode: :editor %>
+    <div data-quill-editor-target="editor" class="quill-editor"></div>
+  </div>
+
+  <div class="form-actions">
+    <%= form.submit(post.persisted? ? "수정 완료" : "글쓰기 완료", class: "button primary submit-button") %>
+  </div>
+<% end %>

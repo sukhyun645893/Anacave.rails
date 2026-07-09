@@ -1,0 +1,5 @@
+one:
+  user: one
+  reportable: one (Post)
+  reason: spam
+  status: open

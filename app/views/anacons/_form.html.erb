@@ -1,0 +1,44 @@
+<%= form_with model: anacon, class: "stack", data: { controller: "anacon-preview" } do |form| %>
+  <% if anacon.errors.any? %>
+    <div class="flash alert">
+      <strong>등록하지 못했습니다.</strong>
+      <ul>
+        <% anacon.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :title, "아나콘 묶음 이름" %>
+    <%= form.text_field :title, required: true, maxlength: 80 %>
+  </div>
+
+  <div>
+    <%= form.label :description, "설명" %>
+    <%= form.text_area :description, rows: 5, maxlength: 1000, placeholder: "어떤 상황에 쓰는 아나콘 묶음인지 적어주세요." %>
+  </div>
+
+  <div>
+    <%= form.label :images, "아나콘 이미지들" %>
+    <%= form.file_field :images,
+      multiple: true,
+      required: true,
+      accept: "image/png,image/jpeg,image/gif,image/webp",
+      data: { action: "anacon-preview#preview", anacon_preview_target: "input" } %>
+    <p class="meta">파일 선택을 여러 번 눌러도 이미지가 누적됩니다. 최대 20개, 각 이미지 5MB 이하입니다.</p>
+  </div>
+
+  <section class="anacon-upload-preview" data-anacon-preview-target="panel" hidden>
+    <div class="anacon-upload-preview-head">
+      <strong>미리보기</strong>
+      <span data-anacon-preview-target="count">0개</span>
+    </div>
+    <div class="anacon-upload-preview-grid" data-anacon-preview-target="grid"></div>
+  </section>
+
+  <div class="form-actions form-actions-top">
+    <%= form.submit "승인 요청", class: "button primary submit-button" %>
+  </div>
+<% end %>

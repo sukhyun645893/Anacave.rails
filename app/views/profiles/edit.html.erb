@@ -1,0 +1,39 @@
+<% content_for :title, "프로필 수정" %>
+
+<h1>프로필 수정</h1>
+
+<%= form_with model: @user, url: profile_path, method: :patch, class: "stack profile-form" do |form| %>
+  <% if @user.errors.any? %>
+    <div class="flash alert">
+      <%= @user.errors.full_messages.to_sentence %>
+    </div>
+  <% end %>
+
+  <div class="profile-preview">
+    <% if @user.avatar.attached? %>
+      <%= image_tag @user.avatar, class: "avatar avatar-large", alt: @user.display_name %>
+    <% else %>
+      <div class="avatar avatar-large avatar-placeholder"><%= @user.display_name.first.upcase %></div>
+    <% end %>
+  </div>
+
+  <div>
+    <%= form.label :avatar, "프로필 이미지" %>
+    <%= form.file_field :avatar, accept: "image/png,image/jpeg,image/gif,image/webp" %>
+  </div>
+
+  <div>
+    <%= form.label :nickname, "닉네임" %>
+    <%= form.text_field :nickname, maxlength: 30, required: true %>
+  </div>
+
+  <div>
+    <%= form.label :bio, "소개" %>
+    <%= form.text_area :bio, rows: 5, maxlength: 300, placeholder: "짧은 소개를 적어보세요." %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit "저장", class: "button primary" %>
+    <%= link_to "취소", profile_path, class: "button" %>
+  </div>
+<% end %>

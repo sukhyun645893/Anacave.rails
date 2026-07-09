@@ -1,0 +1,43 @@
+<% anacons ||= [] %>
+<% mode ||= :editor %>
+
+<div class="anacon-picker">
+  <div class="anacon-picker-head">
+    <strong>내 아나콘</strong>
+    <%= link_to "받으러 가기", anacons_path %>
+  </div>
+
+  <% if anacons.any? %>
+    <div class="anacon-pack-list">
+      <% anacons.each do |anacon| %>
+        <details class="anacon-pack">
+          <summary class="anacon-pack-summary">
+            <% if anacon.cover_image.present? %>
+              <%= image_tag anacon.cover_image, alt: anacon.title %>
+            <% end %>
+            <span>
+              <strong><%= anacon.title %></strong>
+              <small><%= anacon.images.size %>개</small>
+            </span>
+          </summary>
+
+          <div class="anacon-picker-grid">
+            <% anacon.images.each do |image| %>
+              <% if mode == :comment %>
+                <button type="button" class="anacon-pick-button" data-action="comment-anacon#insert" data-anacon-token="[아나콘:<%= image.id %>]" title="<%= anacon.title %>">
+                  <%= image_tag image, alt: anacon.title %>
+                </button>
+              <% else %>
+                <button type="button" class="anacon-pick-button" data-action="quill-editor#insertAnacon" data-anacon-url="<%= url_for(image) %>" title="<%= anacon.title %>">
+                  <%= image_tag image, alt: anacon.title %>
+                </button>
+              <% end %>
+            <% end %>
+          </div>
+        </details>
+      <% end %>
+    </div>
+  <% else %>
+    <p class="empty">받은 아나콘이 아직 없습니다.</p>
+  <% end %>
+</div>

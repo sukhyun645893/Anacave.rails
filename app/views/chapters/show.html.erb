@@ -1,0 +1,32 @@
+<% content_for :title, @chapter.name %>
+
+<section class="section-heading">
+  <div>
+    <p class="meta"><%= link_to "챕터", chapters_path %></p>
+    <h1><%= @chapter.name %></h1>
+    <p><%= @chapter.description %></p>
+  </div>
+  <% if authenticated? %>
+    <%= link_to "새 글", new_chapter_post_path(@chapter), class: "button primary" %>
+  <% end %>
+</section>
+
+<div class="board-table">
+  <div class="board-row board-head">
+    <span>제목</span>
+    <span>작성자</span>
+    <span>작성일</span>
+  </div>
+
+  <% @posts.each do |post| %>
+    <%= link_to post_path(post), class: "board-row" do %>
+      <span class="board-title"><%= post.title %></span>
+      <span><%= post.user.display_name %></span>
+      <span><%= time_ago_in_words(post.created_at) %> 전</span>
+    <% end %>
+  <% end %>
+
+  <% if @posts.empty? %>
+    <p class="empty">아직 게시글이 없습니다. 첫 글을 남겨보세요.</p>
+  <% end %>
+</div>

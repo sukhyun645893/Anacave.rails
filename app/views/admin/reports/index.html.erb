@@ -1,0 +1,56 @@
+<section class="section-heading">
+  <div>
+    <h1>관리</h1>
+    <p>신고된 게시글, 댓글, 아나콘을 확인하고 삭제나 계정 차단을 처리합니다.</p>
+  </div>
+  <%= link_to "아나콘 승인", admin_anacons_path, class: "button" %>
+</section>
+
+<div class="admin-list">
+  <% if @reports.any? %>
+    <% @reports.each do |report| %>
+      <article class="admin-card">
+        <div>
+          <p class="meta"><%= report.status_label %> · <%= report.reason_label %> · 신고자 <%= report.user.display_name %></p>
+          <% if report.reportable.is_a?(Post) %>
+            <h2>게시글: <%= link_to report.reportable.title, report.reportable %></h2>
+            <p><%= report.reportable.user.display_name %> 작성</p>
+          <% elsif report.reportable.is_a?(Comment) %>
+            <h2>댓글: <%= link_to report.reportable.post.title, report.reportable.post %></h2>
+            <p><%= truncate(report.reportable.body, length: 120) %></p>
+            <p><%= report.reportable.user.display_name %> 작성</p>
+          <% elsif report.reportable.is_a?(Anacon) %>
+            <h2>아나콘: <%= link_to report.reportable.title, report.reportable %></h2>
+            <p><%= report.reportable.user.display_name %> 등록 · <%= report.reportable.status_label %></p>
+            <div class="anacon-admin-preview">
+              <% report.reportable.images.each do |image| %>
+                <%= image_tag image, alt: report.reportable.title %>
+              <% end %>
+            </div>
+          <% else %>
+            <h2>삭제된 콘텐츠</h2>
+          <% end %>
+        </div>
+
+        <div class="admin-actions">
+          <%= button_to "처리 완료", admin_report_path(report), method: :patch, class: "button primary", params: { report: { status: "resolved" } } %>
+          <%= button_to "문제 없음", admin_report_path(report), method: :patch, class: "button", params: { report: { status: "dismissed" } } %>
+
+          <% if report.reportable.is_a?(Post) %>
+            <%= button_to "게시글 삭제", admin_post_path(report.reportable), method: :delete, class: "button danger" %>
+            <%= button_to "작성자 차단", block_admin_user_path(report.reportable.user), method: :patch, class: "button danger", disabled: report.reportable.user.blocked? %>
+          <% elsif report.reportable.is_a?(Comment) %>
+            <%= button_to "댓글 삭제", admin_comment_path(report.reportable), method: :delete, class: "button danger" %>
+            <%= button_to "작성자 차단", block_admin_user_path(report.reportable.user), method: :patch, class: "button danger", disabled: report.reportable.user.blocked? %>
+          <% elsif report.reportable.is_a?(Anacon) %>
+            <%= button_to "아나콘 반려", admin_anacon_path(report.reportable, status: "rejected"), method: :patch, class: "button danger", disabled: report.reportable.rejected? %>
+            <%= button_to "아나콘 삭제", admin_anacon_path(report.reportable), method: :delete, class: "button danger" %>
+            <%= button_to "등록자 차단", block_admin_user_path(report.reportable.user), method: :patch, class: "button danger", disabled: report.reportable.user.blocked? %>
+          <% end %>
+        </div>
+      </article>
+    <% end %>
+  <% else %>
+    <p class="empty">아직 접수된 신고가 없습니다.</p>
+  <% end %>
+</div>
