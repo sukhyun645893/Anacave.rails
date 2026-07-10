@@ -27,6 +27,9 @@ module Authentication
 
     def find_session_by_cookie
       Session.find_by(id: cookies.signed[:session_id]) if cookies.signed[:session_id]
+    rescue ActiveSupport::MessageVerifier::InvalidSignature, ActiveSupport::MessageEncryptor::InvalidMessage
+      cookies.delete(:session_id)
+      nil
     end
 
     def request_authentication
