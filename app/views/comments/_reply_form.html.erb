@@ -1,0 +1,7 @@
+<%= form_with model: [post, Comment.new], class: "comment-form reply-comment-form", data: { controller: "comment-anacon" } do |form| %>
+  <%= form.hidden_field :parent_id, value: parent.id %>
+  <%= form.label :body, "#{parent.user.display_name}님에게 답글" %>
+  <%= form.text_area :body, rows: 3, placeholder: "답글을 남겨보세요.", data: { comment_anacon_target: "input" } %>
+  <%= render "anacons/picker", anacons: Current.user.downloaded_anacons.approved.includes(images_attachments: :blob).order("user_anacons.created_at DESC"), mode: :comment %>
+  <%= form.submit "답글 등록", class: "button primary" %>
+<% end %>

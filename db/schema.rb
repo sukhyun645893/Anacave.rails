@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_07_09_001000) do
+ActiveRecord::Schema[8.1].define(version: 2026_07_12_090100) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -70,9 +70,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_09_001000) do
   create_table "comments", force: :cascade do |t|
     t.text "body"
     t.datetime "created_at", null: false
+    t.bigint "parent_id"
     t.integer "post_id", null: false
     t.datetime "updated_at", null: false
     t.integer "user_id", null: false
+    t.index ["parent_id"], name: "index_comments_on_parent_id"
+    t.index ["post_id", "parent_id", "created_at"], name: "index_comments_on_post_id_and_parent_id_and_created_at"
     t.index ["post_id"], name: "index_comments_on_post_id"
     t.index ["user_id"], name: "index_comments_on_user_id"
   end
@@ -144,6 +147,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_09_001000) do
     t.index ["name"], name: "index_site_settings_on_name", unique: true
   end
 
+  create_table "uploaded_images", force: :cascade do |t|
+    t.integer "byte_size", null: false
+    t.string "content_type", null: false
+    t.datetime "created_at", null: false
+    t.binary "data", null: false
+    t.string "filename", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["user_id"], name: "index_uploaded_images_on_user_id"
+  end
+
   create_table "user_anacons", force: :cascade do |t|
     t.bigint "anacon_id", null: false
     t.datetime "created_at", null: false
@@ -174,6 +188,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_09_001000) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "anacons", "users"
   add_foreign_key "anacons", "users", column: "approved_by_id"
+  add_foreign_key "comments", "comments", column: "parent_id"
   add_foreign_key "comments", "posts"
   add_foreign_key "comments", "users"
   add_foreign_key "notifications", "users"
@@ -183,6 +198,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_09_001000) do
   add_foreign_key "posts", "users"
   add_foreign_key "reports", "users"
   add_foreign_key "sessions", "users"
+  add_foreign_key "uploaded_images", "users"
   add_foreign_key "user_anacons", "anacons"
   add_foreign_key "user_anacons", "users"
 end

@@ -3,7 +3,7 @@ Rails.application.routes.draw do
   resource :registration, only: %i[ new create ]
   resource :profile, only: %i[ show edit update ]
   resource :site_setting, only: %i[ edit update ], path: "settings"
-  resources :uploads, only: %i[ create ]
+  resources :uploads, only: %i[ create show ]
   resources :reports, only: %i[ create ]
   resources :user_anacons, only: %i[ create destroy ]
   resources :notifications, only: %i[ index ] do

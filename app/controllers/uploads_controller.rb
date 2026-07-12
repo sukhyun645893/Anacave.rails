@@ -1,9 +1,18 @@
 class UploadsController < ApplicationController
-  # Quill 에디터에서 이미지를 올릴 때 호출되는 업로드 전용 컨트롤러입니다.
-  before_action :ensure_not_blocked
+  allow_unauthenticated_access only: %i[ show ]
+  before_action :ensure_not_blocked, only: %i[ create ]
 
   MAX_IMAGE_SIZE = 5.megabytes
   ALLOWED_IMAGE_TYPES = %w[image/jpeg image/png image/gif image/webp].freeze
+
+  def show
+    uploaded_image = UploadedImage.find_signed!(params[:id], purpose: :uploaded_image)
+
+    send_data uploaded_image.data,
+      type: uploaded_image.content_type,
+      filename: uploaded_image.filename,
+      disposition: "inline"
+  end
 
   def create
     image = params.require(:image)
@@ -18,12 +27,13 @@ class UploadsController < ApplicationController
       return
     end
 
-    blob = ActiveStorage::Blob.create_and_upload!(
-      io: image.open,
+    uploaded_image = Current.user.uploaded_images.create!(
+      data: image.read,
       filename: image.original_filename,
-      content_type: image.content_type
+      content_type: image.content_type,
+      byte_size: image.size
     )
 
-    render json: { url: rails_blob_path(blob, only_path: true) }
+    render json: { url: upload_path(uploaded_image.signed_id(purpose: :uploaded_image)) }
   end
 end

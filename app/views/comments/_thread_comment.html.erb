@@ -1,0 +1,53 @@
+<article class="comment comment-with-avatar nested-comment" style="--comment-depth: <%= depth %>">
+  <% if comment.user.avatar.attached? %>
+    <%= image_tag comment.user.avatar, class: "avatar", alt: comment.user.display_name %>
+  <% else %>
+    <div class="avatar avatar-placeholder"><%= comment.user.display_name.first.upcase %></div>
+  <% end %>
+
+  <div class="comment-content">
+    <p class="meta">
+      <strong><%= comment.user.display_name %></strong>
+      · <%= time_ago_in_words(comment.created_at) %> 전
+      <% if comment.parent.present? %>
+        · <%= comment.parent.user.display_name %>님에게 답글
+      <% end %>
+    </p>
+
+    <%= render_comment_body(comment.body) %>
+
+    <div class="comment-actions">
+      <% if authenticated? %>
+        <%= button_to "신고", reports_path, method: :post, class: "link-button", params: { report: { reportable_type: "Comment", reportable_id: comment.id, reason: "other" } } %>
+      <% end %>
+
+      <% if comment.user == Current.user %>
+        <%= button_to "삭제", comment, method: :delete, class: "link-button text-danger" %>
+      <% end %>
+
+      <% if Current.user&.admin? %>
+        <%= button_to "관리자 삭제", admin_comment_path(comment), method: :delete, class: "link-button text-danger" %>
+        <% unless comment.user.blocked? %>
+          <%= button_to "작성자 차단", block_admin_user_path(comment.user), method: :patch, class: "link-button text-danger" %>
+        <% else %>
+          <%= button_to "차단 해제", unblock_admin_user_path(comment.user), method: :patch, class: "link-button" %>
+        <% end %>
+      <% end %>
+    </div>
+
+    <% if authenticated? %>
+      <details class="reply-box">
+        <summary>답글</summary>
+        <%= render "comments/reply_form", post: post, parent: comment %>
+      </details>
+    <% end %>
+
+    <% if comment.replies.any? %>
+      <div class="comment-replies">
+        <% comment.replies.includes(:parent, user: { avatar_attachment: :blob }).order(created_at: :asc).each do |reply| %>
+          <%= render "comments/thread_comment", comment: reply, post: post, depth: depth + 1 %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</article>

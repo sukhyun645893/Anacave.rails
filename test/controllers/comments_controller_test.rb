@@ -24,6 +24,15 @@ class CommentsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to post_url(@comment.post)
   end
 
+  test "should create nested reply" do
+    assert_difference("Comment.count") do
+      post post_comments_url(@comment.post), params: { comment: { body: "reply", parent_id: @comment.id } }
+    end
+
+    assert_redirected_to post_url(@comment.post)
+    assert_equal @comment, Comment.order(:created_at).last.parent
+  end
+
   test "should show comment" do
     get comment_url(@comment)
     assert_response :success
