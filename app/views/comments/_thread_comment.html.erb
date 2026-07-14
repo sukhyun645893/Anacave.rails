@@ -35,7 +35,7 @@
       <% end %>
     </div>
 
-    <% if authenticated? %>
+    <% if authenticated? && depth.zero? %>
       <details class="reply-box">
         <summary>답글</summary>
         <%= render "comments/reply_form", post: post, parent: comment %>
@@ -44,8 +44,8 @@
   </div>
 </article>
 
-<% if comment.replies.any? %>
-  <div class="comment-replies <%= "flat-replies" if depth.positive? %>">
+<% if depth.zero? && comment.replies.any? %>
+  <div class="comment-replies">
     <% comment.replies.includes(:parent, user: { avatar_attachment: :blob }).order(created_at: :asc).each do |reply| %>
       <%= render "comments/thread_comment", comment: reply, post: post, depth: 1 %>
     <% end %>
