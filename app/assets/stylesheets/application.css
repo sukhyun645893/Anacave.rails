@@ -990,6 +990,19 @@ body.dark-mode .ql-snow .ql-picker {
   max-width: 100%;
 }
 
+.missing-post-image {
+  align-items: center;
+  background: color-mix(in srgb, var(--surface) 84%, var(--line) 16%);
+  border: 1px dashed var(--line);
+  border-radius: 8px;
+  color: var(--muted);
+  display: flex;
+  justify-content: center;
+  min-height: 160px;
+  padding: 18px;
+  text-align: center;
+}
+
 .button,
 button,
 input[type="submit"] {

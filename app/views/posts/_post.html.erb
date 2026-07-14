@@ -1,12 +1,12 @@
 <div id="<%= dom_id post %>">
-  <%# 게시글 제목/작성자/본문을 출력하는 공통 조각입니다. show 화면에서 render @post로 불립니다. %>
+  <%# 게시글 제목, 작성자, 본문을 보여주는 공통 조각입니다. %>
   <p class="meta"><%= link_to post.chapter.name, chapter_path(post.chapter) %></p>
   <h1><%= post.title %></h1>
   <p class="meta"><%= post.user.display_name %> · <%= time_ago_in_words(post.created_at) %> 전</p>
 
   <div class="post-body ql-snow">
-    <div class="ql-editor readonly">
-      <%# Quill에서 저장한 HTML을 허용된 태그만 남기고 sanitize해서 보여줍니다. %>
+    <div class="ql-editor readonly" data-controller="post-body">
+      <%# Quill에서 저장한 HTML 중 허용한 태그만 남기고 보여줍니다. %>
       <%= sanitize post.body,
         tags: %w[p br strong em u s a blockquote ol ul li h1 h2 h3 pre code img span],
         attributes: %w[href target rel src alt width height class style] %>
