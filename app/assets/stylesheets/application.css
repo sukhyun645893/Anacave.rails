@@ -341,14 +341,19 @@ input[type="submit"]:disabled {
   margin-top: 18px;
 }
 
-.nested-comment {
-  margin-left: min(calc(var(--comment-depth) * 24px), 120px);
-}
-
 .comment-replies {
+  border-left: 2px solid var(--line);
   display: grid;
   gap: 10px;
+  margin-left: 18px;
   margin-top: 12px;
+  padding-left: 18px;
+}
+
+.reply-comment .comment-replies {
+  border-left: 0;
+  margin-left: 0;
+  padding-left: 0;
 }
 
 .reply-box {
@@ -1099,10 +1104,6 @@ input[type="submit"].primary {
 
   .vote-score-split {
     width: 100%;
-  }
-
-  .nested-comment {
-    margin-left: min(calc(var(--comment-depth) * 12px), 48px);
   }
 
   .anacon-detail {

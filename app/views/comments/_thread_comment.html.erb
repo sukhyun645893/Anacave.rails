@@ -1,4 +1,4 @@
-<article class="comment comment-with-avatar nested-comment" style="--comment-depth: <%= depth %>">
+<article class="comment comment-with-avatar nested-comment <%= "reply-comment" if depth.positive? %>">
   <% if comment.user.avatar.attached? %>
     <%= image_tag comment.user.avatar, class: "avatar", alt: comment.user.display_name %>
   <% else %>
@@ -45,7 +45,7 @@
     <% if comment.replies.any? %>
       <div class="comment-replies">
         <% comment.replies.includes(:parent, user: { avatar_attachment: :blob }).order(created_at: :asc).each do |reply| %>
-          <%= render "comments/thread_comment", comment: reply, post: post, depth: depth + 1 %>
+          <%= render "comments/thread_comment", comment: reply, post: post, depth: 1 %>
         <% end %>
       </div>
     <% end %>
