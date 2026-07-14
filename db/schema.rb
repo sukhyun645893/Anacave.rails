@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_07_12_090100) do
+ActiveRecord::Schema[8.1].define(version: 2026_07_14_090000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -139,6 +139,25 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_12_090100) do
     t.index ["user_id"], name: "index_sessions_on_user_id"
   end
 
+  create_table "security_events", force: :cascade do |t|
+    t.string "action", null: false
+    t.datetime "created_at", null: false
+    t.string "ip_address"
+    t.string "ip_address_hash", null: false
+    t.bigint "record_id"
+    t.string "record_type"
+    t.datetime "retained_until", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id"
+    t.string "user_agent"
+    t.index ["action"], name: "index_security_events_on_action"
+    t.index ["created_at"], name: "index_security_events_on_created_at"
+    t.index ["ip_address_hash"], name: "index_security_events_on_ip_address_hash"
+    t.index ["record_type", "record_id"], name: "index_security_events_on_record"
+    t.index ["retained_until"], name: "index_security_events_on_retained_until"
+    t.index ["user_id"], name: "index_security_events_on_user_id"
+  end
+
   create_table "site_settings", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.boolean "dark_mode", default: false, null: false
@@ -197,6 +216,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_12_090100) do
   add_foreign_key "posts", "chapters"
   add_foreign_key "posts", "users"
   add_foreign_key "reports", "users"
+  add_foreign_key "security_events", "users"
   add_foreign_key "sessions", "users"
   add_foreign_key "uploaded_images", "users"
   add_foreign_key "user_anacons", "anacons"

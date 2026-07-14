@@ -41,6 +41,7 @@
           <% end %>
           <% if Current.user.admin? %>
             <%= link_to "관리", admin_root_path %>
+            <%= link_to "보안 기록", admin_security_events_path %>
             <%= link_to "아나콘 승인", admin_anacons_path %>
           <% end %>
           <%= button_to "로그아웃", session_path, method: :delete, class: "link-button" %>

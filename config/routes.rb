@@ -19,6 +19,7 @@ Rails.application.routes.draw do
   namespace :admin do
     root "reports#index"
     resources :reports, only: %i[ index update ]
+    resources :security_events, only: %i[ index ]
     resources :anacons, only: %i[ index update destroy ]
     resources :posts, only: %i[ destroy ]
     resources :comments, only: %i[ destroy ]

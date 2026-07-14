@@ -23,6 +23,7 @@ class PostsController < ApplicationController
     @post.chapter ||= current_chapter
 
     if @post.save
+      SecurityEvent.record!(action: "post.create", user: Current.user, record: @post, request: request)
       redirect_to @post, notice: "게시글을 등록했습니다."
     else
       render :new, status: :unprocessable_content

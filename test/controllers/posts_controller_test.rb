@@ -23,10 +23,13 @@ class PostsControllerTest < ActionDispatch::IntegrationTest
     sign_in_as @post.user
 
     assert_difference("Post.count") do
+      assert_difference("SecurityEvent.count") do
       post chapter_posts_url(@chapter), params: { post: { body: @post.body, title: @post.title, chapter_id: @chapter.id } }
+      end
     end
 
     assert_redirected_to post_url(Post.last)
+    assert_equal "post.create", SecurityEvent.last.action
   end
 
   test "should show post" do

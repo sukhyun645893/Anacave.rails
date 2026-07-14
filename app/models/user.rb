@@ -6,6 +6,7 @@ class User < ApplicationRecord
   has_many :posts, dependent: :destroy
   has_many :comments, dependent: :destroy
   has_many :uploaded_images, dependent: :destroy
+  has_many :security_events, dependent: :nullify
   has_many :post_votes, dependent: :destroy
   has_many :reports, dependent: :destroy
   has_many :anacons, dependent: :destroy

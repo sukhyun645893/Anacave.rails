@@ -18,10 +18,13 @@ class CommentsControllerTest < ActionDispatch::IntegrationTest
 
   test "should create comment" do
     assert_difference("Comment.count") do
+      assert_difference("SecurityEvent.count") do
       post post_comments_url(@comment.post), params: { comment: { body: @comment.body } }
+      end
     end
 
     assert_redirected_to post_url(@comment.post)
+    assert_equal "comment.create", SecurityEvent.last.action
   end
 
   test "should create nested reply" do

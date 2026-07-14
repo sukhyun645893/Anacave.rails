@@ -5,6 +5,7 @@ class Post < ApplicationRecord
   has_many :comments, dependent: :destroy
   has_many :post_votes, dependent: :destroy
   has_many :reports, as: :reportable, dependent: :destroy
+  has_many :security_events, as: :record, dependent: :nullify
 
   validates :title, presence: true, length: { maximum: 120 }
   validates :body, presence: true

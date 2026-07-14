@@ -24,6 +24,7 @@ class CommentsController < ApplicationController
     @comment.user = Current.user
 
     if @comment.save
+      SecurityEvent.record!(action: "comment.create", user: Current.user, record: @comment, request: request)
       notify_comment_targets
       redirect_to @post, notice: "댓글을 등록했습니다."
     else

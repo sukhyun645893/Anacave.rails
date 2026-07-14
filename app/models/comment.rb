@@ -9,6 +9,7 @@ class Comment < ApplicationRecord
     dependent: :destroy,
     inverse_of: :parent
   has_many :reports, as: :reportable, dependent: :destroy
+  has_many :security_events, as: :record, dependent: :nullify
 
   validates :body, presence: true
   validate :parent_must_belong_to_same_post
